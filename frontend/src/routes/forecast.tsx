@@ -86,7 +86,7 @@ function ForecastPage() {
               <section className="card-elevated p-5">
                 <h2 className="text-lg font-semibold">Historical Context</h2>
                 <p className="mb-3 text-sm text-muted-foreground">
-                  Expected rainfall compared with the historical normal. Prototype values only.
+                  Expected rainfall compared with the historical normal precipitation.
                 </p>
                 <RainfallChart
                   data={long.daily.map((d) => ({

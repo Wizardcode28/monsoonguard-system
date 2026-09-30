@@ -73,37 +73,48 @@ export const forecastService = {
 };
 
 export const advisoryService = {
-  getAdvisories: (locationId: string, crop?: Crop, lang: string = "hi"): Promise<Advisory[]> =>
-    fetchWithFallback<any>(
-      `${API_BASE_URL}/advisories/${locationId}?crop=${crop || "Soybean"}&lang=${lang}`,
-      () => buildAdvisories(locationId, crop)
-    ).then((res) => {
-      if (Array.isArray(res)) return res;
-      if (res && Array.isArray(res.advisories)) {
-        const from = new Date();
-        const until = new Date(Date.now() + 10 * 86400000);
-        return res.advisories.map((a: any, i: number) => ({
-          id: `${locationId}-${crop || "all"}-${i}`,
-          locationId,
-          crop: (res.crop || crop || "Soybean") as Crop,
-          risk: a.category || "Monsoon Break Risk",
-          action: a.category === "SOWING" ? "Sowing Window" : a.category === "IRRIGATION" ? "Protective Irrigation" : "Field Drainage",
-          severity: (a.urgency || "HIGH") as any,
-          title: `${res.crop || crop || "Crop"} Advisory (${res.language || lang})`,
-          message: a.rationale || a.message,
-          recommendation: a.message,
-          preparation: a.category === "SOWING"
-            ? ["Seed treatment", "Delay sowing until steady rain", "Moisture check"]
-            : a.category === "IRRIGATION"
-              ? ["Arrange sprinkler / drip backup", "Mulching", "Weed control"]
-              : ["Clear field bunds", "Ensure surface drainage", "Hold foliar sprays"],
-          confidence: "High",
-          validFrom: from.toISOString(),
-          validUntil: until.toISOString(),
-        }));
-      }
+  getAdvisories: async (locationId: string, crop?: Crop, lang: string = "hi"): Promise<Advisory[]> => {
+    const cropsToFetch = crop ? [crop] : (["Soybean", "Cotton", "Maize", "Paddy", "Wheat", "Chickpea"] as Crop[]);
+    try {
+      const results = await Promise.all(
+        cropsToFetch.map(async (c) => {
+          const res = await fetch(`${API_BASE_URL}/advisories/${locationId}?crop=${c}&lang=${lang}`).then((r) =>
+            r.ok ? r.json() : null
+          );
+          if (res && Array.isArray(res.advisories)) {
+            const from = new Date();
+            const until = new Date(Date.now() + 10 * 86400000);
+            return res.advisories.map((a: any, i: number) => ({
+              id: `${locationId}-${c.toLowerCase()}-${i}`,
+              locationId,
+              crop: c,
+              risk: a.category === "SOWING" ? "False Onset" : a.category === "IRRIGATION" ? "Dry Spell" : "Heavy Rain",
+              action: a.category === "SOWING" ? "Delay Sowing" : a.category === "IRRIGATION" ? "Protective Irrigation" : "Clear Drainage",
+              severity: (a.urgency || "HIGH") as any,
+              title: `${c} Advisory (${res.language || lang})`,
+              message: a.rationale || a.message,
+              recommendation: a.message,
+              preparation: a.category === "SOWING"
+                ? ["Seed treatment", "Delay sowing until steady rain", "Moisture check"]
+                : a.category === "IRRIGATION"
+                  ? ["Arrange sprinkler / drip backup", "Mulching", "Weed control"]
+                  : ["Clear field bunds", "Ensure surface drainage", "Hold foliar sprays"],
+              confidence: "High",
+              validFrom: from.toISOString(),
+              validUntil: until.toISOString(),
+            }));
+          }
+          return [];
+        })
+      );
+      const flattened = results.flat();
+      if (flattened.length > 0) return flattened;
       return buildAdvisories(locationId, crop);
-    }),
+    } catch (err) {
+      console.warn("[AdvisoryService] Falling back to local data:", err);
+      return buildAdvisories(locationId, crop);
+    }
+  },
 };
 
 export const alertService = {

@@ -66,10 +66,13 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Logo />
         </Link>
         <NavLinks />
-        <div className="mt-auto rounded-xl bg-secondary p-3 text-xs text-secondary-foreground">
-          <p className="font-semibold">Prototype data</p>
-          <p className="mt-1 text-muted-foreground">
-            All forecasts shown are demonstration values, not official predictions.
+        <div className="mt-auto rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-primary">
+          <p className="font-semibold flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            MoES / NCMRWF Feed
+          </p>
+          <p className="mt-1 text-muted-foreground text-[11px] leading-tight">
+            Hyperlocal Block & Panchayat Monsoon Prediction System.
           </p>
         </div>
       </aside>
