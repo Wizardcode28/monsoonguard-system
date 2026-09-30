@@ -3,7 +3,8 @@
 // After backend integration, only src/services/* implementations change.
 
 export const API_BASE_URL =
-  (import.meta as any).env?.VITE_API_URL || "http://localhost:5000/api";
+  (import.meta as any).env?.VITE_API_URL ||
+  "https://monsoonguard-system.onrender.com/api";
 
 export const API_ROUTES = {
   locations: () => `${API_BASE_URL}/locations`,
