@@ -21,7 +21,7 @@
   <b>Bridging coarse 12 km Numerical Weather Prediction (NWP) models to 1 km hyper-local block scales. Integrating planetary teleconnections (ENSO, IOD, MJO) with ML quantile regression to predict monsoon breaks, extreme rain, and deliver actionable multilingual agro-advisories for Indian farmers.</b>
 </p>
 
-[Explore Live Web App](https://monsoonguard-system.vercel.app/) &nbsp;•&nbsp; [Backend API Swagger](https://monsoonguard-system.onrender.com/docs) &nbsp;•&nbsp; [System Architecture](#system-architecture) &nbsp;•&nbsp; [Key Features](#key-modules--capabilities) &nbsp;•&nbsp; [Local Setup](#installation--local-setup)
+[Explore Live Web App](https://monsoonguard-system.vercel.app/) &nbsp;•&nbsp; [Backend API Swagger](https://monsoonguard-system.onrender.com/docs) &nbsp;•&nbsp; [Technical Report (Drive)](https://drive.google.com/file/d/1fH54z9E90YvwI5SwaRdL1u5-AXliAjqK/view?usp=sharing) &nbsp;•&nbsp; [Demo Video (Drive)](https://drive.google.com/file/d/11RcsCXPiOgg9B4bcHfbTABs25oBDbCiB/view?usp=sharing) &nbsp;•&nbsp; [System Architecture](#system-architecture)
 
 <br />
 
@@ -303,6 +303,15 @@ flowchart LR
 
     M1 --> M2 --> M3
 ```
+
+---
+
+## Project Deliverables & Verification
+* **Live System**: [https://monsoonguard-system.vercel.app/](https://monsoonguard-system.vercel.app/)
+* **Backend API Swagger**: [https://monsoonguard-system.onrender.com/docs](https://monsoonguard-system.onrender.com/docs)
+* **Technical Specification & Report**: [Google Drive PDF](https://drive.google.com/file/d/1fH54z9E90YvwI5SwaRdL1u5-AXliAjqK/view?usp=sharing)
+* **Demo Video Walkthrough**: [Google Drive MP4](https://drive.google.com/file/d/11RcsCXPiOgg9B4bcHfbTABs25oBDbCiB/view?usp=sharing)
+* **Presentation Deck**: [docs/MonsoonGuard_SIH2026.pptx](./docs/MonsoonGuard_SIH2026.pptx)
 
 ---
 

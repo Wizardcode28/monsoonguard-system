@@ -78,9 +78,10 @@ s1_data = [
     ("Ministry / Organization", "Ministry of Earth Sciences (MoES) / NCMRWF"),
     ("Theme", "Agriculture, FoodTech & Rural Development"),
     ("PS Category", "Software"),
-    ("Target Workforces", "140M+ Indian Farmers, KVKs, District Agriculture Officers"),
     ("Live Frontend URL", "https://monsoonguard-system.vercel.app/"),
-    ("Live Backend API", "https://monsoonguard-system.onrender.com/docs")
+    ("Live Backend API", "https://monsoonguard-system.onrender.com/docs"),
+    ("Technical Report (PDF)", "https://drive.google.com/file/d/1fH54z9E90YvwI5SwaRdL1u5-AXliAjqK/view?usp=sharing"),
+    ("Demo Video Walkthrough", "https://drive.google.com/file/d/11RcsCXPiOgg9B4bcHfbTABs25oBDbCiB/view?usp=sharing")
 ]
 
 for idx, (label, val) in enumerate(s1_data):

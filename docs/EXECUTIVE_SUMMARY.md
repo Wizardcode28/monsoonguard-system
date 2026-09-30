@@ -1,8 +1,8 @@
 # MonsoonGuard AI — Executive Summary Brief
 **Smart India Hackathon (SIH) 2026** | **Problem Statement ID: 26086**  
 **Issuing Organization:** Ministry of Earth Sciences (MoES) & National Centre for Medium Range Weather Forecasting (NCMRWF)  
-**Theme:** Agriculture, FoodTech & Rural Development &nbsp;|&nbsp; **Category:** Software  
-**Live Platform:** [https://monsoonguard-system.vercel.app/](https://monsoonguard-system.vercel.app/) &nbsp;|&nbsp; **API:** [https://monsoonguard-system.onrender.com/docs](https://monsoonguard-system.onrender.com/docs)
+**Live Platform:** [https://monsoonguard-system.vercel.app/](https://monsoonguard-system.vercel.app/) &nbsp;|&nbsp; **API:** [https://monsoonguard-system.onrender.com/docs](https://monsoonguard-system.onrender.com/docs)  
+**Technical Report (PDF):** [Google Drive Link](https://drive.google.com/file/d/1fH54z9E90YvwI5SwaRdL1u5-AXliAjqK/view?usp=sharing) &nbsp;|&nbsp; **Demo Video:** [Google Drive Link](https://drive.google.com/file/d/11RcsCXPiOgg9B4bcHfbTABs25oBDbCiB/view?usp=sharing)
 
 ---
 
