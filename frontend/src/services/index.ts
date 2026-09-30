@@ -77,7 +77,33 @@ export const advisoryService = {
     fetchWithFallback<any>(
       `${API_BASE_URL}/advisories/${locationId}?crop=${crop || "Soybean"}&lang=${lang}`,
       () => buildAdvisories(locationId, crop)
-    ).then((res) => (Array.isArray(res) ? res : res.advisories || buildAdvisories(locationId, crop))),
+    ).then((res) => {
+      if (Array.isArray(res)) return res;
+      if (res && Array.isArray(res.advisories)) {
+        const from = new Date();
+        const until = new Date(Date.now() + 10 * 86400000);
+        return res.advisories.map((a: any, i: number) => ({
+          id: `${locationId}-${crop || "all"}-${i}`,
+          locationId,
+          crop: (res.crop || crop || "Soybean") as Crop,
+          risk: a.category || "Monsoon Break Risk",
+          action: a.category === "SOWING" ? "Sowing Window" : a.category === "IRRIGATION" ? "Protective Irrigation" : "Field Drainage",
+          severity: (a.urgency || "HIGH") as any,
+          title: `${res.crop || crop || "Crop"} Advisory (${res.language || lang})`,
+          message: a.rationale || a.message,
+          recommendation: a.message,
+          preparation: a.category === "SOWING"
+            ? ["Seed treatment", "Delay sowing until steady rain", "Moisture check"]
+            : a.category === "IRRIGATION"
+              ? ["Arrange sprinkler / drip backup", "Mulching", "Weed control"]
+              : ["Clear field bunds", "Ensure surface drainage", "Hold foliar sprays"],
+          confidence: "High",
+          validFrom: from.toISOString(),
+          validUntil: until.toISOString(),
+        }));
+      }
+      return buildAdvisories(locationId, crop);
+    }),
 };
 
 export const alertService = {
