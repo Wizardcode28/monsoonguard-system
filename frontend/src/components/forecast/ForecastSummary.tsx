@@ -102,8 +102,13 @@ export function DailyOutlook({ forecast }: { forecast: Forecast }) {
       {forecast.daily.slice(0, 7).map((d) => (
         <div key={d.date} className="card-elevated p-3 text-center">
           <p className="text-xs font-medium text-muted-foreground">
-            {new Date(d.date).toLocaleDateString("en-IN", { weekday: "short", day: "numeric" })}
+            {new Date(d.date).toLocaleDateString("en-IN", {
+              timeZone: "Asia/Kolkata",
+              weekday: "short",
+              day: "numeric",
+            })}
           </p>
+
           <CloudRain
             className="mx-auto my-2 h-6 w-6 text-rain"
             style={{ opacity: 0.3 + Math.min(0.7, d.rainfallMm / 25) }}

@@ -28,15 +28,21 @@ export const riskHex: Record<RiskLevel, string> = {
   CRITICAL: "var(--risk-critical)",
 };
 
-export function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+export function formatDate(iso: string | Date) {
+  return new Date(iso).toLocaleDateString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    day: "numeric",
+    month: "short",
+  });
 }
 
-export function formatDateTime(iso: string) {
+export function formatDateTime(iso: string | Date) {
   return new Date(iso).toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
     day: "numeric",
     month: "short",
     hour: "numeric",
     minute: "2-digit",
   });
 }
+

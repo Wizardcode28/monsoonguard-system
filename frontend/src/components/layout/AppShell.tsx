@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Bell, Menu, User } from "lucide-react";
+import { Bell, Clock, Menu, User } from "lucide-react";
+
 import { useEffect, useState, type ReactNode } from "react";
 import { Logo } from "./Logo";
 import { MOBILE_NAV, navForRole } from "./navConfig";
@@ -54,10 +55,37 @@ export function AppShell({ children }: { children: ReactNode }) {
       setRole("farmer");
   }, [pathname, role, setRole]);
   const today = new Date().toLocaleDateString("en-IN", {
+    timeZone: "Asia/Kolkata",
     weekday: "short",
     day: "numeric",
     month: "short",
   });
+
+  const [istTime, setIstTime] = useState(() =>
+    new Date().toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    })
+  );
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIstTime(
+        new Date().toLocaleTimeString("en-IN", {
+          timeZone: "Asia/Kolkata",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
+        })
+      );
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -100,9 +128,17 @@ export function AppShell({ children }: { children: ReactNode }) {
             <LocationSelector className="w-[240px]" />
           </div>
 
-          <span className="hidden text-xs text-muted-foreground md:inline">
-            {today} · Updated 6:00 AM
-          </span>
+          <div className="hidden items-center gap-2 md:flex">
+            <span className="text-xs text-muted-foreground">
+              {today} · Updated 6:00 AM IST
+            </span>
+            <div className="flex items-center gap-1.5 rounded-full border border-border/80 bg-muted/50 px-2.5 py-0.5 text-xs text-muted-foreground">
+              <Clock className="size-3 text-primary" />
+              <span className="font-mono text-[11px] font-medium text-foreground">{istTime}</span>
+              <span className="text-[10px] font-semibold text-primary">IST</span>
+            </div>
+          </div>
+
 
           <div className="ml-auto flex items-center gap-2">
             <RoleSwitcher />
