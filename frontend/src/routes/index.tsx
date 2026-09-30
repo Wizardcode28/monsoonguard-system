@@ -187,8 +187,7 @@ function Landing() {
 
       <footer className="border-t border-border bg-surface py-8">
         <div className="mx-auto max-w-6xl px-4 text-xs text-muted-foreground sm:px-6">
-          MonsoonGuard prototype · All forecast values shown are demonstration data, not official
-          predictions.
+          MonsoonGuard · Ministry of Earth Sciences (MoES) & NCMRWF · Hyperlocal Monsoon Onset & Break Prediction System
         </div>
       </footer>
     </div>
