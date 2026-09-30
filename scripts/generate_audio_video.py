@@ -3,61 +3,78 @@ import asyncio
 import edge_tts
 import imageio_ffmpeg
 import subprocess
+import shutil
 
-AUDIO_DIR = r"d:\SIH_2026\monsoonguard-system\docs\videos"
-AUDIO_FILE = os.path.join(AUDIO_DIR, "narration.mp3")
-VIDEO_IN = os.path.join(AUDIO_DIR, "monsoonguard-demo.mp4")
-VIDEO_OUT = os.path.join(AUDIO_DIR, "monsoonguard-demo-with-audio.mp4")
+VIDEOS_DIR = r"d:\SIH_2026\monsoonguard-system\docs\videos"
+RAW_VIDEO = os.path.join(VIDEOS_DIR, "monsoonguard-demo-raw.mp4")
+FINAL_VIDEO = os.path.join(VIDEOS_DIR, "monsoonguard-demo.mp4")
+AUDIO_FILE = os.path.join(VIDEOS_DIR, "narration_hq.mp3")
 
-VOICE = "en-IN-PrabhatNeural"
+# Natural, expressive, authoritative voice
+VOICE = "en-IN-NeerjaExpressiveNeural"
 
-NARRATION_SCRIPT = """
-Welcome to MonsoonGuard AI, an AI-powered hyper-local monsoon prediction and agronomic advisory engine, built for Smart India Hackathon 2026, Problem Statement 26086, for the Ministry of Earth Sciences and NCMRWF.
-Conventional numerical weather prediction models operate at a coarse 12-kilometer grid resolution. 
-They cannot resolve localized micro-climates, convective storms, or break-monsoon dry spells at the sub-district and block level.
-MonsoonGuard AI solves this challenge.
-On our real-time dashboard, we ingest and visualize global planetary teleconnection indices, including ENSO Niño 3.4, the Indian Ocean Dipole, and Madden-Julian Oscillation waves.
-Our multi-output LightGBM Quantile Downscaling Engine downscales 12-kilometer numerical models to 1-kilometer hyper-local resolution, achieving a 50.4 percent reduction in root mean square error.
-We provide 16-day probabilistic rainfall curves with P10, P50, and P90 confidence envelopes, alongside a dedicated break-monsoon dry spell radar operating at a 91.2 percent F1-score.
-Our interactive geospatial map visualizes sub-district block choropleths across Bhopal and Sehore, displaying localized soil moisture, precipitation anomalies, and risk tiers.
-Our multilingual agronomic advisory hub translates meteorological data into actionable farm operations, providing crop-specific spray windows, sowing schedules, and field drainage alerts in both Hindi and English.
-For district agriculture officers and disaster managers, the command center enables multi-block vulnerability ranking, early warning threshold alerts, and automated broadcast dispatches.
-MonsoonGuard AI transforms numerical weather prediction into resilient farming livelihoods across 6,000 administrative blocks in India.
-Thank you.
-"""
-
-async def generate_narration():
-    print("Synthesizing neural voiceover narration with Edge TTS...")
-    communicate = edge_tts.Communicate(NARRATION_SCRIPT.strip(), VOICE, rate="+3%")
-    await communicate.save(AUDIO_FILE)
-    print(f"Narration saved to: {AUDIO_FILE}")
-
-def multiplex_audio_video():
-    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
-    print(f"Using FFmpeg binary: {ffmpeg_exe}")
+# Exactly timed for ~95-97 seconds video duration with natural pauses
+SCRIPT = (
+    "Welcome to MonsoonGuard AI. "
+    "A machine learning downscaling and agronomic advisory engine developed for Smart India Hackathon 2026, "
+    "Problem Statement 26086, under the Ministry of Earth Sciences and NCMRWF. "
     
-    # Merge audio with video, keeping video quality and looping/trimming if needed
+    "Conventional numerical weather prediction models operate at a coarse 12-kilometer grid resolution. "
+    "Consequently, they cannot resolve micro-climatic variations, localized convective storms, or break-monsoon dry spells at the village block level. "
+    
+    "MonsoonGuard AI directly bridges this gap. "
+    "Here on our real-time dashboard, the system monitors planetary climate teleconnections, including ENSO Niño 3.4, the Indian Ocean Dipole, and Madden-Julian Oscillation waves. "
+    
+    "Our multi-output LightGBM Quantile Downscaling Engine translates 12-kilometer numerical boundaries into 1-kilometer hyper-local resolution, reducing prediction RMSE by over 50 percent. "
+    "We provide 16-day probabilistic rainfall forecasts with P10, P50, and P90 confidence envelopes, alongside an early-warning dry spell radar operating at 91.2 percent F1-score. "
+    
+    "Our interactive geospatial map visualizes sub-district block choropleths across Bhopal and Sehore, displaying local soil moisture indices and risk tiers. "
+    
+    "Our multilingual advisory hub delivers actionable guidance, specifying optimal pesticide spray windows, sowing schedules, and field drainage alerts in both Hindi and English. "
+    
+    "Finally, the district officer command center equips agricultural officers and disaster managers with multi-block vulnerability rankings and automated emergency alert broadcasting. "
+    
+    "MonsoonGuard AI. Transforming numerical weather prediction into climate resilience for Indian farmers."
+)
+
+async def synthesize_hq_voice():
+    print(f"Synthesizing studio-grade narration with {VOICE}...")
+    communicate = edge_tts.Communicate(
+        text=SCRIPT,
+        voice=VOICE,
+        rate="-2%",     # Slightly calmer, very clear natural cadence
+        pitch="+0Hz"
+    )
+    await communicate.save(AUDIO_FILE)
+    print(f"HQ Audio saved to {AUDIO_FILE}")
+
+def assemble_final_video():
+    ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+    
+    # Check if raw video backup exists; if not, use the video track
+    input_video = RAW_VIDEO if os.path.exists(RAW_VIDEO) else FINAL_VIDEO
+    temp_output = os.path.join(VIDEOS_DIR, "temp_render.mp4")
+
+    print(f"Multiplexing audio and video using FFmpeg ({ffmpeg_exe})...")
+    
     cmd = [
         ffmpeg_exe,
         "-y",
-        "-i", VIDEO_IN,
+        "-i", input_video,
         "-i", AUDIO_FILE,
         "-c:v", "copy",
         "-c:a", "aac",
         "-b:a", "192k",
+        "-ar", "44100",
         "-shortest",
-        VIDEO_OUT
+        temp_output
     ]
-    print("Running FFmpeg multiplexing...")
     subprocess.run(cmd, check=True)
-    print(f"Final demonstration video with audio created at: {VIDEO_OUT}")
-
-    # Overwrite monsoonguard-demo.mp4 with the audio-enhanced version as standard
-    if os.path.exists(VIDEO_OUT):
-        import shutil
-        shutil.copyfile(VIDEO_OUT, VIDEO_IN)
-        print(f"Updated primary demo video: {VIDEO_IN}")
+    
+    # Overwrite final video cleanly
+    shutil.move(temp_output, FINAL_VIDEO)
+    print(f"High-quality synchronized demonstration video written to: {FINAL_VIDEO}")
 
 if __name__ == "__main__":
-    asyncio.run(generate_narration())
-    multiplex_audio_video()
+    asyncio.run(synthesize_hq_voice())
+    assemble_final_video()
